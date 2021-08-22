@@ -1,0 +1,39 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Collections.Immutable
+@using Vossers.BlazorWasmSignalrIssue.Shared
+
+@code {
+
+    private HubConnection? _hubConnection;
+    private ImmutableViewModel? _immutableViewModel;
+    private MutableViewModel? _mutableViewModel;
+    private int _callbackCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl("https://localhost:5001/demo")               
+            .Build();
+
+        _hubConnection.On<ImmutableViewModel> ("ImmutableViewModelUpdated", (immutableViewModel) =>
+        {
+            _callbackCount++;
+            _immutableViewModel = immutableViewModel;
+            StateHasChanged();
+        });
+
+        _hubConnection.On<MutableViewModel> ("MutableViewModelUpdated", (mutableViewModel) =>
+        {
+            _callbackCount++;
+            _mutableViewModel = mutableViewModel;
+            StateHasChanged();
+        });
+            
+        await _hubConnection.StartAsync();
+    }    
+}
+
+<div>Signal callback count: @_callbackCount</div>
+<div>@(_immutableViewModel == null ? "_immutableViewModel is null" : $"_immutableViewModel.Items.Count: {_immutableViewModel.Items.Count}")</div>
+<div>@(_mutableViewModel == null ? "_mutableViewModel is null" : $"_mutableViewModel.Items.Count: {_mutableViewModel.Items.Count}")</div>
