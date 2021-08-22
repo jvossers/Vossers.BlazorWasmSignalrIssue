@@ -10,19 +10,19 @@ This solution contains 3 projects.
 - a Blazor WebAssembly Client
 - a Shared project
 
-When  you run both the SignalR server and the Blazor WebAssembly Client from Visual Studio everything works as expected. That is, once the browser has the home page of the Blazor WebAssembly project it should output the following:
+When  you run both the SignalR server and the Blazor WebAssembly Client from Visual Studio everything works as expected. That is, once the browser has loaded the home page of the Blazor WebAssembly project it should output the following:
 
     Signal callback count: 2
     _immutableViewModel.Items.Count: 3
     _mutableViewModel.Items.Count: 3
 
-However, when you publish the Blazor WebAssembly client to a local folder and serve it from there while running the SignalR Server project in Visual Studio the problem becomes visible, which is that one of the SignalR Callbacks in the Blazor WebAssembly client does not fire. In this case the output will be:
+However, when you publish the Blazor WebAssembly client from Visual Studio to a local folder and serve it from there while running the SignalR Server project in Visual Studio then a problem will occur, which is that one of the two SignalR Callbacks in the Blazor WebAssembly client does not fire (the other one does fire). In this case the output will be:
 
     Signal callback count: 1
     _immutableViewModel is null
     _mutableViewModel.Items.Count: 3
 
-To serve the published Blazor WebAssembly project from the local folder it was published to:
+To serve the published Blazor WebAssembly project from the local folder it was published to you can use the following approach:
 
 1. Install **http-server** globally using `npm install http-server -g`
 2. Run `http-server -a localhost -p 5003` from the directory containing the published files where index.html lives (typically <project>\bin\Release\net6.0\browser-wasm\publish\wwwroot) 
@@ -31,7 +31,7 @@ To serve the published Blazor WebAssembly project from the local folder it was p
 # What is going on?
 It looks like the **ImmutableViewModelUpdated** callback that is defined in **Index.razor** never fires if the client project went through the publishing process. It works fine in Visual Studio, whereas **MutableViewModelUpdated** always fires, even when using a "published" client.
   
-The main difference between both callbacks is the structure of the parameter passed being in. I am thinking it might be related to the use of Immutable collections / lack of parameterless public constructor, but I don't understand why it works fine when running from Visual Studio.  
+The main difference between both callbacks is the structure of the parameter passed being in. I am thinking it might be related to the use of Immutable collections / lack of parameterless public constructor so I could work around it by just using Lists, Arrays, Dictionaries etc, but what I don't understand is why it works fine when running from Visual Studio.  
 
     protected override async Task OnInitializedAsync()
     {
