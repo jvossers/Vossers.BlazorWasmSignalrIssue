@@ -55,3 +55,10 @@ The main difference between both callbacks is the structure of the parameter pas
             
         await _hubConnection.StartAsync();
     }
+
+# Relevant code files
+
+- [WebAssemblyClient/Pages/Index.razor](https://github.com/jvossers/Vossers.BlazorWasmSignalrIssue/blob/main/src/Vossers.BlazorWasmSignalrIssue.WebAssemblyClient/Pages/Index.razor)
+- [SignalrServer/Hubs/DemoHub.cs](https://github.com/jvossers/Vossers.BlazorWasmSignalrIssue/blob/main/src/Vossers.BlazorWasmSignalrIssue.SignalrServer/Hubs/DemoHub.cs)
+- [Shared/ImmutableViewModel.cs](https://github.com/jvossers/Vossers.BlazorWasmSignalrIssue/blob/main/src/Vossers.BlazorWasmSignalrIssue.Shared/ImmutableViewModel.cs)
+- [Shared/MutableViewModel.cs](https://github.com/jvossers/Vossers.BlazorWasmSignalrIssue/blob/main/src/Vossers.BlazorWasmSignalrIssue.Shared/MutableViewModel.cs)
