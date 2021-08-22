@@ -1,6 +1,8 @@
 # Vossers.BlazorWasmSignalrIssue
 This repo contains code can be used to reproduce an issue I found with Blazor WebAssembly as a SignalR client where client callbacks don't fire in some circumstances, but only after publishing the WebAssembly project.
 
+Note that I am on a Windows machine using Visual Studio 2022 Preview 3.1 
+
 # Overview
 This solution contains 3 projects.
 
@@ -8,25 +10,23 @@ This solution contains 3 projects.
 - a Blazor WebAssembly Client
 - a Shared project
 
-When you you run both the SignalR server and the Blazor WebAssembly Client from Visual Studio everything works as expected. That is, the browser should output the following:
+When  you run both the SignalR server and the Blazor WebAssembly Client from Visual Studio everything works as expected. That is, once the browser has the home page of the Blazor WebAssembly project it should output the following:
 
     Signal callback count: 2
     _immutableViewModel.Items.Count: 3
     _mutableViewModel.Items.Count: 3
 
-However, when you publish the Blazor WebAssembly client to a local folder and serve it from there while running the Signalr Server project in VS the problem becomes visible, which is that one of the signalr Callbacks in the Blazor WebAssembly client does not fire. In this case the output will be:
+However, when you publish the Blazor WebAssembly client to a local folder and serve it from there while running the SignalR Server project in Visual Studio the problem becomes visible, which is that one of the SignalR Callbacks in the Blazor WebAssembly client does not fire. In this case the output will be:
 
     Signal callback count: 1
     _immutableViewModel is null
     _mutableViewModel.Items.Count: 3
 
-To serve the published Blazor WebAssembly from local folder:
+To serve the published Blazor WebAssembly project from the local folder it was published to:
 
-1. make sure http-server is installed globally using `npm install http-server -g`
-
-2. run `http-server -a localhost -p 5003` from the directory containing the published files where index.html lives (<project>\bin\Release\net6.0\browser-wasm\publish\wwwroot) 
-
-I tried the above on a Windows machine using Visual Studio 2022 Preview 3.1 
+1. Install **http-server** globally using `npm install http-server -g`
+2. Run `http-server -a localhost -p 5003` from the directory containing the published files where index.html lives (typically <project>\bin\Release\net6.0\browser-wasm\publish\wwwroot) 
+3. Open http://localhost:5003 in the browser (note that you will need to update the CORS config in the SignalR Server project's Startup.cs if you choose to use a different port)
 
 # What is going on?
 It looks like the **ImmutableViewModelUpdated** callback that is defined in **Index.razor** never fires if the client project went through the publishing process. It works fine in Visual Studio, whereas **MutableViewModelUpdated** always fires, even if the client project went using a published client.
