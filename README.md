@@ -29,9 +29,9 @@ To serve the published Blazor WebAssembly project from the local folder it was p
 3. Open http://localhost:5003 in the browser (note that you will need to update the CORS config in the SignalR Server project's Startup.cs if you choose to use a different port)
 
 # What is going on?
-It looks like the **ImmutableViewModelUpdated** callback that is defined in **Index.razor** never fires if the client project went through the publishing process. It works fine in Visual Studio, whereas **MutableViewModelUpdated** always fires, even if the client project went using a published client.
+It looks like the **ImmutableViewModelUpdated** callback that is defined in **Index.razor** never fires if the client project went through the publishing process. It works fine in Visual Studio, whereas **MutableViewModelUpdated** always fires, even when using a "published" client.
   
-The main different between both callbacks is the structure of the parameter passed in. I am thinking it might be related to  the use of Immutable collections / lack of parameterless public constructor but then I don't understand why it works fine when running from Visual Studio.  
+The main difference between both callbacks is the structure of the parameter passed being in. I am thinking it might be related to the use of Immutable collections / lack of parameterless public constructor, but I don't understand why it works fine when running from Visual Studio.  
 
     protected override async Task OnInitializedAsync()
     {
